@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="AttachFile">
+
+    <!-- call AttachFile.insertMulti -->
+    <insert id="insertMulti" 
+        parameterType="Map">
+        INSERT INTO CIP_ATTACHFILE 
+        (ATTACHFILE_SEQ, SOURCE_UNIQUE_SEQ, ORGINALFILE_NAME, PHYSICALFILE_NAME, REGISTER_SEQ, REGISTRY_DATE, MODIFIER_SEQ, MODIFY_DATE)
+        VALUES 
+        <foreach collection="attachFiles" item="item" open="(" separator="),(" close=")">
+        #{item.ATTACHFILE_SEQ}, #{item.SOURCE_UNIQUE_SEQ}, #{item.ORGINALFILE_NAME}, #{item.PHYSICALFILE_NAME}, #{item.REGISTER_SEQ}, sysdate(), #{item.MODIFIER_SEQ}, sysdate()
+        </foreach>
+        
+    </insert>
+
+</mapper>

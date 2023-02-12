@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Poll">
+    <!-- call Poll.selectFromUSERDATA -->
+    <select id="selectFromUSERDATA" 
+        parameterType="Map" resultType="Map">
+        SELECT * 
+        FROM USERDATA 
+        <if test="pageScale != null">
+        ORDER BY USER_UID 
+        LIMIT #{pageBegin}, #{pageScale}
+        </if>
+    </select>
+    
+    <!-- call Poll.fixedSelectFromUSERDATA -->
+    <select id="fixedSelectFromUSERDATA" 
+        parameterType="Map" resultType="Map">
+        SELECT * 
+        FROM USERDATA 
+        <if test="pageScale != null">
+        ORDER BY USER_UID 
+        LIMIT 1, 10
+        </if>
+    </select>
+
+        <!-- call Poll.selectByUSER_UID -->
+    <select id="selectByUSER_UID" 
+        parameterType="Map" resultType="Map">
+        SELECT * 
+        FROM USERDATA 
+        WHERE USER_UID = #{USER_UID} 
+    </select>
+
+
+    <!-- call Poll.insertUSERDATA -->
+    <insert id="insertUSERDATA" 
+        parameterType="Map">
+        INSERT INTO USERDATA 
+        (USER_UID, NAME, ID, PASSWORD, PHONE_NUMBER, BIRTHDAY, EMAIL, SMS_AD, EMAIL_AD)
+        VALUES (#{USER_UID}, #{NAME}, #{ID}, #{PASSWORD}, #{PHONE_NUMBER}, #{BIRTHDAY}, #{EMAIL}
+        <choose>
+            <when test="SMS_AD != null">
+                , true
+            </when>
+            <otherwise>
+                , false
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="EMAIL_AD != null">
+                , true
+            </when>
+            <otherwise>
+                , false
+            </otherwise>
+        </choose>
+        )
+    </insert>
+    
+    <!-- call Poll.updateByUSER_UID -->
+    <update id="updateByUSER_UID" 
+        parameterType="Map">
+        UPDATE USERDATA 
+        SET NAME=#{NAME}, ID=#{ID}, PASSWORD=#{PASSWORD}, PHONE_NUMBER=#{PHONE_NUMBER}, BIRTHDAY=#{BIRTHDAY}, EMAIL=#{EMAIL}
+        <choose>
+            <when test="SMS_AD != null">
+                , SMS_AD=true
+            </when>
+            <otherwise>
+                , SMS_AD=false
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="EMAIL_AD != null">
+                , EMAIL_AD=true
+            </when>
+            <otherwise>
+                , EMAIL_AD=false
+            </otherwise>
+        </choose>
+        WHERE USER_UID=#{USER_UID}
+    </update>
+    
+    <!-- call Poll.deleteByUSER_UID --> 
+    <update id="deleteByUSER_UID" 
+        parameterType="Map"> 
+        DELETE FROM USERDATA 
+        WHERE USER_UID=#{USER_UID} 
+    </update> 
+
+    <!-- call Poll.selectTotal -->
+    <select id="selectTotal" 
+        parameterType="Map" resultType="int">
+        SELECT COUNT(*) 
+        FROM USERDATA 
+    </select>
+
+    <!-- call Poll.insertTestUsers -->
+    <insert id="insertTestUsers" 
+        parameterType="Map">
+        insert into USERDATA 
+        (USER_UID, NAME, ID, PASSWORD, PHONE_NUMBER, BIRTHDAY, EMAIL, SMS_AD, EMAIL_AD) 
+        select concat(QUESTIONS_UID, EXAMPLE_UID, now()), '테스트Name','테스트ID','테스트PASSWORD','테스트PHONE_NUMBER','테스트BIRTHDAY','테스트EMAIL', true, false
+        from answers
+    </insert>
+</mapper>
